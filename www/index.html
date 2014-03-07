@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html lang="en">
+	<title>Orderchief Proto </title>
+	<head>
+    <title>My Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css">
+    <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+	<script src="http://cloud.github.com/downloads/jaubourg/jquery-jsonp/jquery.jsonp-2.4.0.min.js"></script>
+</head>
+<body>
+	<div data-role="page" id="vendors">
+	
+		<div data-role="header">
+			<h1>Oc Welcome</h1>
+		</div>
+		
+		<div data-role="content">
+			<ul data-role="listview" id="vendors-list" data-divider-theme="b" data-inset="true"></ul>
+		</div>
+		
+		<div data-role="footer">
+			<h4>orderchief.com</h4>
+		</div>
+	</div>	
+</body>
+
+<!-- <script>
+
+$('#vendors').live("pageshow",function(){
+    $.get('http://138.120.142.137:8080/server/getVendors' , function(data){
+$.each(data, function (key, value) {
+    list += '<li class="row">' + value.vendorName + '</li>';
+});
+$('#vendors-list').html(list).listview('refresh');
+})
+</script>
+ -->
+<!-- <script>
+$(document).ready(function(){
+$('#vendors').live("pageshow",function(){
+$.ajax({
+    url: 'http://138.120.142.137:8080/server/getVendors',
+    crossDomain: true,
+	dataType: 'json',
+	data : $('vendors').serialize(),
+    success: function(data){
+        $.each(data, function (key, value) {
+		alert(value.vendorName);
+		list += '<li class="row">' + value.vendorName + '</li>';
+		}); 
+	$('#vendors-list').html(list).listview('refresh');
+    },
+    error: function(){
+       output.text('There was an error loading the data.');
+    }
+});
+})
+})
+</script> -->
+
+ 
+<!-- <script>
+$(document).ready(function(){			
+	$.jsonp({
+		url: 'http://138.120.142.137:8080/server/getVendors',
+		success: onFetchVendorsSuccess,
+		error: function(){
+			$('#vendors-list').append('<li>There was an error loading the feed');
+		}
+	});
+
+	function onFetchVendorsSuccess(data, textStatus, jqXHR){
+listOfVendors = data;
+console.log('Status:' + textStatus);
+console.log('Data'+ $.toJSON(data));
+var content='';
+$.each(listOfVendors,function(i,vendor){
+content += "<li data-role='list-divider'>" + vendor.vendorName + "</li>"
+
+$('#vendors-list').html(content).listview('refresh');
+});
+
+}
+	});
+
+</script> -->
+<!-- <script>
+$.getJSON('http://138.120.142.137:8080/server/getVendors.jsonp?' , function(data){
+$.each(data, function (key, value) {
+    list += '<li class="row">' + value.vendorName + '</li>';
+});
+$('#vendors-list').html(list).listview('refresh');
+})
+</script> -->
+
+<!-- <script>
+var listOfVendors;
+$('#vendors').live('pageshow',function(event,ui){
+$.ajax({
+type:'GET',
+crossDomain: true,
+url:'http://138.120.142.137:8080/server/getVendors',
+cache:false,
+dataType:'json',
+success: onFetchVendorsSuccess,
+error: onFetchVendorsError
+});
+
+});
+
+function onFetchVendorsSuccess(data, textStatus, jqXHR){
+listOfVendors = data;
+console.log('Status:' + textStatus);
+console.log('Data'+ $.toJSON(data));
+var content='';
+$.each(listOfVendors,function(i,vendor){
+content += "<li data-role='list-divider'>" + vendor.vendorName + "</li>"
+
+$('#vendors-list').html(content).listview('refresh');
+});
+
+}
+</script> -->
+
+
+</html>
