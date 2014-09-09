@@ -1,7 +1,8 @@
 
 
 $(document).on('pageinit','#vendors', function(){
-
+	var pushNotification = window.plugins.pushNotification;
+    pushNotification.register(app.successHandler, app.errorHandler,{"senderID":"953355430463","ecb":"app.onNotificationGCM"});
 		$(document).on('click','#vendors-list li', function(){
 			sessionStorage.selectedVendorId = $(this).jqmData('id');
 			console.log('Selected id: ' + sessionStorage.selectedVendorId);
