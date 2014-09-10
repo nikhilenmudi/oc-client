@@ -47,56 +47,7 @@ var app = {
         console.log('Received Event: ' + id);
         
         
-    },
-    
-    successHandler: function(result) {
-        alert('Callback Success! Result = '+result)
-    },
-    
-    errorHandler:function(error) {
-        alert(error);
-    },
-    
-    onNotificationGCM: function(e) {
-        switch( e.event )
-        {
-            case 'registered':
-                if ( e.regid.length > 0 )
-                {
-                    console.log("Regid " + e.regid);
-                    alert('registration id = '+e.regid);
-                }
-            break;
- 
-            case 'message':
-            	// if this flag is set, this notification happened while we were in the foreground.
-            	// you might want to play a sound to get the user's attention, throw up a dialog, etc.
-            	if (e.foreground)
-            	{
-					
-				      
-				       alert("foreground");
-				}
-				else
-				{	// otherwise we were launched because the user touched a notification in the notification tray.
-					
-					
-				}
-					
-				alert('MSG: ' + e.payload.data);
-                //android only
-				
-                //amazon-fireos only
-                
-            break;
- 
-            case 'error':
-              alert('GCM error = '+e.msg);
-            break;
- 
-            default:
-              alert('An unknown GCM event has occurred');
-              break;
-        }
     }
+    
+   
 };
