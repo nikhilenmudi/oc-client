@@ -11,7 +11,8 @@ module.exports = [
 module.exports.metadata = 
 // TOP OF METADATA
 {
-    "com.phonegap.plugins.PushPlugin": "2.2.1"
+    "com.phonegap.plugins.PushPlugin": "2.2.1",
+    "org.apache.cordova.geolocation": "0.3.10-dev"
 }
 // BOTTOM OF METADATA
 });

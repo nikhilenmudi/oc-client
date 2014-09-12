@@ -16,4 +16,7 @@
     <feature name="PushPlugin">
         <param name="android-package" value="com.plugin.gcm.PushPlugin" />
     </feature>
+    <feature name="Geolocation">
+    <param name="android-package" value="org.apache.cordova.GeoBroker" />
+	</feature>
 </widget>

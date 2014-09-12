@@ -1,6 +1,14 @@
+$(document).on('pagebeforecreate', '#vendors', function(){     
+    setTimeout(function(){
+        $.mobile.loading('show');
+    },1);    
+});
 
 
 $(document).on('pageinit','#vendors', function(){
+	
+	
+	navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError);
 	var pushNotification = window.plugins.pushNotification;
     pushNotification.register(successHandler, errorHandler,{"senderID":"953355430463","ecb":"onNotificationGCM"});
 		$(document).on('click','#vendors-list li', function(){
@@ -20,9 +28,19 @@ $(document).on('pageinit','#vendors', function(){
 });
 	
 });
+function onLocationSuccess(position){
+	
+	alert('Latitude : '+ position.coords.latitude + 'Longitude : '+ position.coords.longitude);
+	
+}
+
+function onLocationError(error) {
+    alert('code: '    + error.code    + '\n' +
+          'message: ' + error.message + '\n');
+}
 
 function successHandler(result) {
-    alert('Callback Success! Result = '+result)
+    //alert('Callback Success! Result = '+result)
 }
 
 function errorHandler(error) {
@@ -36,7 +54,7 @@ function onNotificationGCM(e) {
             if ( e.regid.length > 0 )
             {
                 console.log("Regid " + e.regid);
-                alert('registration id = '+e.regid);
+                //alert('registration id = '+e.regid);
 				sessionStorage.registration_id = e.regid;
             }
         break;
