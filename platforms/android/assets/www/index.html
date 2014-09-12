@@ -25,6 +25,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
         <link rel="stylesheet" href="css/ocss.css">
 		<link rel="stylesheet" href="css/jquery.mobile-1.4.3.min.css">
+		<link rel="stylesheet" href="css/themes/oc.css" />
+  		<link rel="stylesheet" href="css/themes/oc.min.css" />
 		<script src="cordova.js"></script>
 		
         <script src="js/Controller.js"></script>
@@ -35,42 +37,42 @@
     <body>
     
     <div data-role="page" data-control-title="Home" id="home">
-      <div data-theme="a" data-role="header">
+      <div data-theme="A" data-role="header">
           <h3>
               OrderChief
           </h3>
       </div>
       <div data-role="content">
-          <a data-role="button" data-transition="slide" href="#vendors" data-icon="search"
+          <a data-theme="A" data-role="button" data-transition="slide" href="#vendors" data-icon="search"
           data-iconpos="left">
               Near Me
           </a>
       </div>
   </div>
 	
-    <div data-role="page" id="vendors">
+    <div data-theme="A" data-role="page" id="vendors">
 	
-		<div data-role="header" data-position="fixed">
+		<div data-theme="A" data-role="header" data-position="fixed">
 			<h1>ORDERCHIEF</h1>
 		</div> <!-- Header -->
 		<div data-role="content">
 			<ul data-role="listview" id="vendors-list" data-divider-theme="b" data-inset="true"></ul>
         </div> <!-- content -->
-       <div data-role="footer" data-position="fixed">
+       <div data-theme="A" data-role="footer" data-position="fixed">
 			<h4>orderchief.com</h4>
 		</div><!-- footer -->
 	</div>	<!-- page #vendors -->
 	
 	
-	<div data-role="page" id="Menu">
-		<div data-role="header" data-position="fixed">
+	<div data-theme="A" data-role="page" id="Menu">
+		<div data-theme="A" data-role="header" data-position="fixed">
 			<h1>Menu</h1>
 			<a data-role="button" data-icon="arrow-r" data-theme="b" class="ui-btn-right" id="submit">Pay</a>
 		</div><!-- header -->
-		<div data-role="content" id="menu-content">
+		<div data-theme="A" data-role="content" id="menu-content">
 				<span>Order Total : </span><span id="total"></span>
 		</div> <!-- content -->
-		<div data-role="footer" data-position="fixed">
+		<div data-theme="A" data-role="footer" data-position="fixed">
 			<h4>orderchief.com</h4>
 		</div><!-- footer -->
 	</div><!-- page #Menu -->

@@ -1,8 +1,3 @@
-$(document).on('pagebeforecreate', '#vendors', function(){     
-    setTimeout(function(){
-        $.mobile.loading('show');
-    },1);    
-});
 
 
 $(document).on('pageinit','#vendors', function(){
@@ -19,9 +14,11 @@ $(document).on('pageinit','#vendors', function(){
 		});
 		
 		$("#vendors").on('pagebeforeshow', function(){
+		
 		$.ajax({
 		type : 'GET',
-		url : "http://192.168.2.22:8080/server/getVendors",
+		//url : "http://192.168.2.22:8080/server/getVendors",
+		url : "http://137.122.206.165:8080/server/getVendors",
 		success : getListOfVendors
 		
 	});
@@ -108,7 +105,8 @@ $(document).on('pageinit','#Menu',function(){
 	var menuForVendor =sessionStorage.selectedVendorId;
 	$.ajax({
 		type:'GET',
-		url:"http://192.168.2.22:8080/server/getMenu/"+menuForVendor,
+		//url:"http://192.168.2.22:8080/server/getMenu/"+menuForVendor,
+		url:"http://137.122.206.165:8080/server/getMenu/"+menuForVendor,
 		success: getMenuForVendor
 	});
 	
@@ -163,7 +161,8 @@ console.log(JSON.stringify(order));
 var jsonOrders = JSON.stringify(order);
 $.ajax({  
         type : 'POST',  
-        url : "http://192.168.2.22:8080/server/submitorder/"+userGcmKey,  
+        //url : "http://192.168.2.22:8080/server/submitorder/"+userGcmKey,
+        url : "http://137.122.206.165:8080/server/submitorder/"+userGcmKey,
         data : jsonOrders,
 		contentType : 'application/json',
         success : function() {  
