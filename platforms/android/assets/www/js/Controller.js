@@ -1,34 +1,48 @@
 
+var latitude;
+var longitude;
 
-$(document).on('pageinit','#vendors', function(){
 	
-	
+$(document).on('pagebeforecreate', '#vendors', function(){     
+    setTimeout(function(){
+        $.mobile.loading('show');
+    },1);    
+});
+
+
+
+$(document).on('pageinit','#vendors', function(){	
 	navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError);
-	var pushNotification = window.plugins.pushNotification;
-    pushNotification.register(successHandler, errorHandler,{"senderID":"953355430463","ecb":"onNotificationGCM"});
+	
 		$(document).on('click','#vendors-list li', function(){
 			sessionStorage.selectedVendorId = $(this).jqmData('id');
 			console.log('Selected id: ' + sessionStorage.selectedVendorId);
 			$.mobile.changePage('#Menu');
 			
 		});
-		
-		$("#vendors").on('pagebeforeshow', function(){
-		
-		$.ajax({
-		type : 'GET',
-		//url : "http://192.168.2.22:8080/server/getVendors",
-		url : "http://137.122.206.165:8080/server/getVendors",
-		success : getListOfVendors
-		
-	});
-});
 	
 });
 function onLocationSuccess(position){
 	
-	alert('Latitude : '+ position.coords.latitude + 'Longitude : '+ position.coords.longitude);
+	latitude = position.coords.latitude;
+	longitude = position.coords.longitude;
+	console.log("Showing location here<<<---------------------------------------------------->>"+latitude+"--"+longitude);
+	showVendors(latitude, longitude);
+	//alert('Latitude : '+ position.coords.latitude + 'Longitude : '+ position.coords.longitude);
 	
+}
+
+function showVendors(latitude, longitude){
+
+		console.log("Showing page before show location here<<<---------------------------------------------------->>"+latitude+"--"+longitude);
+		$.ajax({
+		type : 'GET',
+		//url : "http://192.168.2.22:8080/server/getVendors",
+		url : "http://orderchiefcloud-orderchief.rhcloud.com/getVendors/"+latitude+"/"+longitude,
+		success : getListOfVendors
+		
+	});
+
 }
 
 function onLocationError(error) {
@@ -93,26 +107,30 @@ function getListOfVendors(data){
 	var vendor = data;
 	//alert("creating");
 	$.each(vendor,function(i, value){
-	list += '<li class="row" data-id ='+value.vendorId+'><img src="img/logo.png" /><h3>'+value.vendorName+'</h3></li>';
+	list += '<li class="row" data-id ='+value.vendorId+'><img src="'+value.logo+'" /><h3>'+value.vendorName+'</h3><p>'+value.distance+' kms</p></li>';
 	});
 	$('#vendors-list').html(list).trigger('create');
 	$('#vendors-list').listview('refresh');
+	$.mobile.loading('hide');
 }
 
 
 $(document).on('pageinit','#Menu',function(){
 	//$.mobile.showPageLoadingMsg();
+	var pushNotification = window.plugins.pushNotification;
+    pushNotification.register(successHandler, errorHandler,{"senderID":"953355430463","ecb":"onNotificationGCM"});
 	var menuForVendor =sessionStorage.selectedVendorId;
 	$.ajax({
 		type:'GET',
 		//url:"http://192.168.2.22:8080/server/getMenu/"+menuForVendor,
-		url:"http://137.122.206.165:8080/server/getMenu/"+menuForVendor,
+		url:"http://orderchiefcloud-orderchief.rhcloud.com/getMenu/"+menuForVendor,
 		success: getMenuForVendor
 	});
 	
 });
 
 function getMenuForVendor(data,status,jqxhr){
+	
 	var menu = data;
 		var menulistitem = createList(menu);
 		$('#menu-content').append(menulistitem);
@@ -162,7 +180,7 @@ var jsonOrders = JSON.stringify(order);
 $.ajax({  
         type : 'POST',  
         //url : "http://192.168.2.22:8080/server/submitorder/"+userGcmKey,
-        url : "http://137.122.206.165:8080/server/submitorder/"+userGcmKey,
+        url : "http://orderchiefcloud-orderchief.rhcloud.com/submitorder/"+userGcmKey,
         data : jsonOrders,
 		contentType : 'application/json',
         success : function() {  
