@@ -11,6 +11,10 @@
                         {
                             "xml": "<feature name=\"PushPlugin\"><param name=\"android-package\" value=\"com.plugin.gcm.PushPlugin\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -32,7 +36,7 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
-                            "count": 1
+                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"com.google.android.c2dm.permission.RECEIVE\" />",
@@ -80,6 +84,9 @@
             "PACKAGE_NAME": "com.orderchief.occlient"
         },
         "org.apache.cordova.geolocation": {
+            "PACKAGE_NAME": "com.orderchief.occlient"
+        },
+        "org.apache.cordova.vibration": {
             "PACKAGE_NAME": "com.orderchief.occlient"
         }
     },

@@ -11,7 +11,8 @@ $(document).on('pagebeforecreate', '#vendors', function(){
 
 
 
-$(document).on('pageinit','#vendors', function(){	
+$(document).on('pageinit','#vendors', function(){
+	
 	navigator.geolocation.getCurrentPosition(onLocationSuccess, onLocationError);
 	
 		$(document).on('click','#vendors-list li', function(){
@@ -26,6 +27,7 @@ function onLocationSuccess(position){
 	
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
+	alert("Your location is "+latitude+" , "+longitude);
 	console.log("Showing location here<<<---------------------------------------------------->>"+latitude+"--"+longitude);
 	showVendors(latitude, longitude);
 	//alert('Latitude : '+ position.coords.latitude + 'Longitude : '+ position.coords.longitude);
@@ -35,6 +37,7 @@ function onLocationSuccess(position){
 function showVendors(latitude, longitude){
 
 		console.log("Showing page before show location here<<<---------------------------------------------------->>"+latitude+"--"+longitude);
+		
 		$.ajax({
 		type : 'GET',
 		//url : "http://192.168.2.22:8080/server/getVendors",
@@ -76,6 +79,17 @@ function onNotificationGCM(e) {
         	if (e.foreground)
         	{
 				
+			console.log($("#app-status-ul").html());
+			
+			
+            // on Android soundname is outside the payload.
+            // On Amazon FireOS all custom attributes are contained within payload
+            //var soundfile = e.soundname || e.payload.sound;
+            // if the notification contains a soundname, play it.
+            //var my_media = new Media("/android_asset/www/"+ beep.wav);
+            //my_media.play();
+				
+			      
 			      
 			       alert("foreground");
 			}
@@ -84,7 +98,7 @@ function onNotificationGCM(e) {
 				
 				
 			}
-				
+			navigator.vibrate(3000);	
 			alert('MSG: ' + e.payload.data);
             //android only
 			
@@ -107,7 +121,7 @@ function getListOfVendors(data){
 	var vendor = data;
 	//alert("creating");
 	$.each(vendor,function(i, value){
-	list += '<li class="row" data-id ='+value.vendorId+'><img src="'+value.logo+'" /><h3>'+value.vendorName+'</h3><p>'+value.distance+' kms</p></li>';
+	list += '<li class="row" data-id ='+value.vendorId+'><img src="'+value.logo+'" /><h3>'+value.vendorName+'</h3><p>'+value.distance+' kms   Wait - '+value.waitingNumber+'</p></li>';
 	});
 	$('#vendors-list').html(list).trigger('create');
 	$('#vendors-list').listview('refresh');
@@ -129,6 +143,76 @@ $(document).on('pageinit','#Menu',function(){
 	
 });
 
+$(document).on('pageinit','#payment',function(){
+	$('#submitPayment').on('click',function(){
+				Stripe.setPublishableKey('pk_test_ncGWhS9H6MA1nJbx9CdeUiEX');
+				var cardNumber = $("#cardNumber").val();
+				var cardName = $("#cardName").val();
+				var expDate = $("#expDate").val();
+				var cvcNumber = $("#cvc").val();
+				Stripe.card.createToken({
+				number: cardNumber,
+				cvc: cvcNumber,
+				exp_month: expDate.slice(0,2),
+				exp_year: expDate.slice(2,4)
+				}, stripeResponseHandler);
+				var paymentInfo = cardNumber+" "+cardName+" "+expDate+" "+cvc;
+				//"{"cardNumber":cardNumber,"cardName":cardName,"expDate":expDate,"cvc":cvc}"
+                // Send data to server through the ajax call
+                // action is functionality we want to call and outputJSON is our data
+                          
+                
+		
+	});
+	
+
+});
+function stripeResponseHandler(status, response) {
+  var $form = $('#paymentInfo');
+
+  if (response.error) {
+    // Show the errors on the form
+    $form.find('.payment-errors').text(response.error.message);
+  } else {
+    // response contains id and card, which contains additional card details
+    var paymentToken = response.id;
+    // Insert the token into the form so it gets submitted to the server
+    $form.append($('<input type="hidden" name="stripeToken" />').val(paymentToken));
+    // and submit
+    console.log("The token is created "+paymentToken);
+	//$form.get(0).submit();
+	var userGcmKey = sessionStorage.registration_id;
+	console.log("payment for order key   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"+userGcmKey);
+	var jsonOrders = sessionStorage.currentOrder;
+	console.log("orders are this +++++++++++++++++++++++++++++++++++++++++++++++++++++++++"+jsonOrders);
+	var complexKey = userGcmKey+" "+paymentToken;
+	$.ajax({
+						type: 'POST',
+						url: "http://orderchiefcloud-orderchief.rhcloud.com/processPayment/"+complexKey,
+                        data : jsonOrders,
+						contentType : 'application/json',
+                        async: 'true',
+                        beforeSend: function() {
+                            // This callback function will trigger before data is sent
+                        	
+                            $.mobile.loading('show'); // This will show ajax spinner
+                        },
+                        complete: function() {
+                            $.mobile.loading('hide');// This callback function will trigger on data sent/received complete
+							 // This will hide ajax spinner
+                        },
+                        success: function() {
+								
+                                $.mobile.changePage("#thankYou");                        
+                            
+                        },
+                        error: function (request,error) {
+                            // This callback function will trigger on unsuccessful action               
+                            alert('Network error has occurred please try again!');
+                        }
+                    });            
+  }
+}
 function getMenuForVendor(data,status,jqxhr){
 	
 	var menu = data;
@@ -139,6 +223,7 @@ function getMenuForVendor(data,status,jqxhr){
 		$('.custom').checkboxradio();
 		
 		$(".custom").on('change', calculateTotal);
+		$(".custom-ch").on('change', calculateTotal);
 		$("#submit").on('click', submitOrder);
 		//$.mobile.hidePageLoadingMsg();
 }
@@ -149,6 +234,12 @@ function calculateTotal(){
 	$("input[type='radio']:checked").each(function(){
 		total = parseFloat(total) + parseFloat($(this).val());
 	});
+	
+	$("input[type='checkbox']:checked").each(function(){
+		total = parseFloat(total) + parseFloat($(this).val());
+	});
+	
+	
 	$("#total").html(total);
 }
 
@@ -156,7 +247,7 @@ function submitOrder(){
 var orderItem = {};
 var order = [];
 var userGcmKey = sessionStorage.registration_id;
-console.log(userGcmKey);
+console.log("submitting order with key -------------------------------------------------------"+userGcmKey);
 $("div[data-role='collapsible']").each(function(i){
 	id = $(this).attr('data-id');
 	var subOptionIds = [];
@@ -177,16 +268,10 @@ $("div[data-role='collapsible']").each(function(i){
 });
 console.log(JSON.stringify(order));
 var jsonOrders = JSON.stringify(order);
-$.ajax({  
-        type : 'POST',  
-        //url : "http://192.168.2.22:8080/server/submitorder/"+userGcmKey,
-        url : "http://orderchiefcloud-orderchief.rhcloud.com/submitorder/"+userGcmKey,
-        data : jsonOrders,
-		contentType : 'application/json',
-        success : function() {  
-            $.mobile.changePage('#thankYou');  
-        }  
-    });  
+sessionStorage.currentOrder = jsonOrders;
+$.mobile.changePage('#payment');
+
+
 }
 
 function createList(menudata){
